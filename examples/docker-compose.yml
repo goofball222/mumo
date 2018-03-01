@@ -1,0 +1,23 @@
+version: '2.2'
+
+services:
+  murmur:
+    image: <your favorite murmur container>
+    container_name: murmur
+    ports:
+      - 64738:64738
+      - 64738:64738/udp
+    volumes:
+      - /<DATA_VOLUME>/murmur/data:/data
+      - /<DATA_VOLUME>/murmur/murmur.ini:/etc/murmur.ini
+
+  mumo:
+    image: goofball/mumo:latest
+    container_name: mumo
+    network_mode: service:murmur
+    depends_on:
+      - murmur
+    volumes:
+      - /<DATA_VOLUME>/mumo/config:/opt/mumo/config
+      - /<DATA_VOLUME>/mumo/log:/opt/mumo/log
+     
