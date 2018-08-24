@@ -20,6 +20,7 @@ ENV \
     MUMO_OPTS= \
     PGID=999 \
     PUID=999 \
+    RUN_CHOWN=true \
     RUNAS_UID0=false
 
 WORKDIR /opt/mumo
@@ -30,14 +31,17 @@ RUN set -x \
     && delgroup ping \
     && addgroup -g $PGID mumo \
     && adduser -D -G mumo -u $PUID mumo \
-    && apk add --no-cache bash libstdc++ openssl shadow su-exec \
-    && apk add --no-cache --virtual .build-deps bzip2-dev g++ git openssl-dev \
+    && apk add -q --no-cache --virtual .build-deps \
+        bzip2-dev g++ git openssl-dev \
+    && apk add -q --no-cache \
+        bash libstdc++ openssl shadow su-exec tzdata \
     && pip install --global-option=build_ext --global-option="-D__USE_UNIX98" zeroc-ice \
     && git clone https://github.com/mumble-voip/mumo.git . \
-    && apk del .build-deps \
     && bash -c 'mkdir -p {config,log}' \
     && mv /opt/mumo/mumo.ini /opt/mumo/mumo.ini-default \
     && chown -R mumo:mumo /opt/mumo \
+    && apk del -q .build-deps \
+    && rm -rf /tmp/* /var/cache/apk/* \
     && find /usr/local -depth \
              \( \
                  \( -type d -a \( -name test -o -name tests \) \) \

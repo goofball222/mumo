@@ -3,8 +3,8 @@
 # Init script for Mumble/Murmur server "mumo.py" script Docker container
 # License: Apache-2.0
 # Github: https://github.com/goofball222/mumo.git
-SCRIPT_VERSION="0.0.1"
-# Last updated date: 2018-02-28
+SCRIPT_VERSION="1.0.1"
+# Last updated date: 2018-08-24
 
 set -Eeuo pipefail
 
@@ -29,13 +29,32 @@ MUMO_OPTS="${MUMO_OPTS}"
 
 cd ${BASEDIR}
 
+do_chown() {
+    if [ "${RUN_CHOWN}" == 'false' ]; then
+        if [ ! "$(stat -c %u ${BASEDIR})" = "${PUID}" ] || [ ! "$(stat -c %u ${CONFIGDIR})" = "${PUID}" ] \
+        || [ ! "$(stat -c %u ${LOGDIR})" = "${PUID}" ]; then
+            log "WARN - Configured PUID doesn't match owner of a required directory. Ignoring RUN_CHOWN=false"
+            log "INFO - Ensuring permissions are correct before continuing - 'chown -R mumo:mumo ${BASEDIR}'"
+            log "INFO - Running recursive 'chown' on Docker overlay2 storage is **really** slow. This may take a bit."
+            chown -R mumo:mumo ${BASEDIR}
+        else
+            log "INFO - RUN_CHOWN set to 'false' - Not running 'chown -R mumo:mumo ${BASEDIR}', assume permissions are right."
+        fi
+    else
+        log "INFO - Ensuring permissions are correct before continuing - 'chown -R mumo:mumo ${BASEDIR}'"
+        log "INFO - Running recursive 'chown' on Docker overlay2 storage is **really** slow. This may take a bit."
+        chown -R mumo:mumo ${BASEDIR}
+    fi
+}
+
+
 mumo_setup() {
 
     if [ ! -f /opt/mumo/config/mumo.ini ]
     then
         log "WARN - No mumo.ini found in ${CONFIGDIR}, copying from defaults"
 
-        cp /opt/mumo/mumo.ini-default /opt/mumo/config/mumo.ini
+        cp -p /opt/mumo/mumo.ini-default /opt/mumo/config/mumo.ini
 
         sed -i 's/mumo.log/\/opt\/mumo\/log\/mumo.log/' /opt/mumo/config/mumo.ini
         sed -i 's/modules\//\/opt\/mumo\/config\/modules\//' /opt/mumo/config/mumo.ini
@@ -43,8 +62,8 @@ mumo_setup() {
 
         chmod a+rw /opt/mumo/config/mumo.ini
 
-        cp -r /opt/mumo/modules /opt/mumo/config
-        cp -r /opt/mumo/modules-available /opt/mumo/config
+        cp -pr /opt/mumo/modules /opt/mumo/config
+        cp -pr /opt/mumo/modules-available /opt/mumo/config
 
         mkdir -p /opt/mumo/config/modules-enabled
         log "WARN - Defaults copied. Edit the mumo.ini file and add modules before restarting the container."
@@ -54,9 +73,6 @@ mumo_setup() {
     fi
 
     ln -s /opt/mumo/config/modules-enabled /opt/mumo/modules-enabled
-
-    log "INFO - Ensuring file permissions for mumo user/group - 'chown -R mumo:mumo ${BASEDIR}'"
-    chown -R mumo:mumo ${BASEDIR}
 
     MUMO_OPTS="${MUMO_OPTS} -i ${CONFIGDIR}/mumo.ini"
 }
@@ -89,17 +105,19 @@ trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM
 if [ "$(id -u)" = '0' ];
     then
         log "INFO - Entrypoint running with UID 0 (root)"
-        if [ "$(id mumo -u)" != "${PUID}" ] || [ "$(id mumo -g)" != "${PGID}" ];
+        if [ "$(id mumo -g)" != "${PGID}" ] || [ "$(id mumo -u)" != "${PUID}" ];
             then
-                log "INFO - Setting custom mumo UID/GID: UID=${PUID}, GID=${PGID}"
-                usermod -u ${PUID} mumo && groupmod -g ${PGID} mumo
+                log "INFO - Setting custom mumo GID/UID: GID=${PGID}, UID=${PUID}"
+                groupmod -o -g ${PGID} mumo
+                usermod -o -u ${PUID} mumo
             else
-                log "INFO - UID/GID for mumo are unchanged: UID=${PUID}, GID=${PGID}"
+                log "INFO - GID/UID for mumo are unchanged: GID=${PGID}, UID=${PUID}"
         fi
 
         if [[ "${@}" == 'mumo' ]];
             then
                 mumo_setup
+                do_chown
                 if [ "${RUNAS_UID0}" == 'true' ];
                     then
                        log "INFO - RUNAS_UID0 = 'true', running mumo as UID 0 (root)"
@@ -112,7 +130,7 @@ if [ "$(id -u)" = '0' ];
                        idle_handler
                 fi
 
-                log "INFO - Use su-exec to drop priveleges and start mumo as UID=${PUID}, GID=${PGID}"
+                log "INFO - Use su-exec to drop priveleges and start mumo as GID=${PGID}, UID=${PUID}"
                 log "EXEC - su-exec mumo:mumo ${MUMO} ${MUMO_OPTS}"
                 exec 0<&-
                 exec su-exec mumo:mumo ${MUMO} ${MUMO_OPTS} &
@@ -123,8 +141,8 @@ if [ "$(id -u)" = '0' ];
         fi
     else
         log "WARN - Container/entrypoint not started as UID 0 (root)"
-        log "WARN - Unable to change permissions or set custom UID/GID if configured"
-        log "WARN - Process will be spawned with UID=$(id -u), GID=$(id -g)"
+        log "WARN - Unable to change permissions or set custom GID/UID if configured"
+        log "WARN - Process will be spawned with GID=$(id -g), UID=$(id -u)"
         log "WARN - Depending on permissions requested command may not work"
         if [[ "${@}" == 'mumo' ]];
             then
