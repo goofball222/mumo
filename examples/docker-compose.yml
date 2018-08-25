@@ -1,5 +1,9 @@
 version: '3'
 
+
+
+**Environment variables:**
+
 services:
   murmur:
     image: goofball222/murmur
@@ -9,8 +13,10 @@ services:
       - 64738:64738/udp
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./data:/data
-      - ./murmur.ini:/etc/murmur.ini
+      - ./cert:/opt/murmur/cert
+      - ./config:/opt/murmur/config
+      - ./data:/opt/murmur/data
+      - ./log:/opt/murmur/log
     environment:
       - TZ=UTC
 
