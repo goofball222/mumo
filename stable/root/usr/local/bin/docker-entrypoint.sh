@@ -3,8 +3,8 @@
 # Init script for Mumble/Murmur server "mumo.py" script Docker container
 # License: Apache-2.0
 # Github: https://github.com/goofball222/mumo.git
-SCRIPT_VERSION="1.0.1"
-# Last updated date: 2018-08-24
+SCRIPT_VERSION="1.0.2"
+# Last updated date: 2018-10-16
 
 set -Eeuo pipefail
 
@@ -72,7 +72,7 @@ mumo_setup() {
         log "INFO - Using existing mumo.ini and config found in ${CONFIGDIR}"
     fi
 
-    ln -s /opt/mumo/config/modules-enabled /opt/mumo/modules-enabled
+    ln -sf /opt/mumo/config/modules-enabled /opt/mumo/modules-enabled
 
     MUMO_OPTS="${MUMO_OPTS} -i ${CONFIGDIR}/mumo.ini"
 }
