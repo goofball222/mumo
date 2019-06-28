@@ -5,8 +5,8 @@
 ## Docker tags:
 | Tag | Description | Release Date |
 | --- | --- | :---: |
-| [latest](https://github.com/goofball222/mumo/blob/master/stable/Dockerfile) | Latest stable release | 2018-08-24 |
-| [release-1.0.1](https://github.com/goofball222/mumo/releases/tag/1.0.1) | Static stable release tag/image | 2018-08-24 |
+| [latest](https://github.com/goofball222/mumo/blob/master/stable/Dockerfile) | Latest stable release | 2019-06-28 |
+| [release-1.0.2](https://github.com/goofball222/mumo/releases/tag/1.0.1) | Static stable release tag/image | 2019-06-28 |
 
 ---
 

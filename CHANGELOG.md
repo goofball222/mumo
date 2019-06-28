@@ -1,3 +1,6 @@
+* **2019-06-28**
+    * Update Dockerfile, retarget to 2-alpine as base image
+---
 * **2018-08-24**
     * Update Dockerfile
         * Shh, be vewy vewy quiet, I'm hunting errors in the build logs. (Add -q to Dockerfile apk commands)
