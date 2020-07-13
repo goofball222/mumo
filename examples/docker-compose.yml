@@ -21,7 +21,7 @@ services:
       - TZ=UTC
 
   mumo:
-    image: goofball/mumo
+    image: goofball222/mumo
     container_name: mumo
     network_mode: service:murmur
     depends_on:
