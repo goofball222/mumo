@@ -1,9 +1,5 @@
 version: '3'
 
-
-
-**Environment variables:**
-
 services:
   murmur:
     image: goofball222/murmur
