@@ -1,3 +1,8 @@
+* **2021-06-17**
+    * Switch to GitHub actions for builds
+    * Update LABEL format to latest
+    * Update README.md badges
+---
 * **2019-06-28**
     * Update Dockerfile, retarget to 2-alpine as base image
 ---

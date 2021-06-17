@@ -1,16 +1,16 @@
 # Mumble Mumo Docker Container
 
-[![Docker Build Status](https://img.shields.io/docker/cloud/build/goofball222/mumo.svg)](https://hub.docker.com/r/goofball222/mumo/) [![Docker Pulls](https://img.shields.io/docker/pulls/goofball222/mumo.svg)](https://hub.docker.com/r/goofball222/mumo/) [![Docker Stars](https://img.shields.io/docker/stars/goofball222/mumo.svg)](https://hub.docker.com/r/goofball222/mumo/) [![MB Layers](https://images.microbadger.com/badges/image/goofball222/mumo.svg)](https://microbadger.com/images/goofball222/mumo) [![MB Commit](https://images.microbadger.com/badges/commit/goofball222/mumo.svg)](https://microbadger.com/images/goofball222/mumo) [![MB License](https://images.microbadger.com/badges/license/goofball222/mumo.svg)](https://microbadger.com/images/goofball222/mumo)
+[![Latest Build Status](https://github.com/goofball222/mumo/actions/workflows/build-latest.yml/badge.svg)](https://github.com/goofball222/mumo/actions/workflows/build-latest.yml) [![Docker Pulls](https://img.shields.io/docker/pulls/goofball222/mumo.svg)](https://hub.docker.com/r/goofball222/mumo/) [![Docker Stars](https://img.shields.io/docker/stars/goofball222/mumo.svg)](https://hub.docker.com/r/goofball222/mumo/) [![MB License](https://images.microbadger.com/badges/license/goofball222/mumo.svg)](https://microbadger.com/images/goofball222/mumo)
 
 ## Docker tags:
 | Tag | Description | Release Date |
 | --- | --- | :---: |
-| [latest](https://github.com/goofball222/mumo/blob/master/stable/Dockerfile) | Latest stable release | 2019-06-28 |
-| [release-1.0.2](https://github.com/goofball222/mumo/releases/tag/1.0.1) | Static stable release tag/image | 2019-06-28 |
+| [latest](https://github.com/goofball222/mumo/blob/main/stable/Dockerfile) | Latest stable release | 2021-06-17 |
+| [1.1.0](https://github.com/goofball222/mumo/releases/tag/1.1.0) | Static stable release tag/image | 2021-06-17 |
 
 ---
 
-* [Recent changes, see: GitHub CHANGELOG.md](https://github.com/goofball222/mumo/blob/master/CHANGELOG.md)
+* [Recent changes, see: GitHub CHANGELOG.md](https://github.com/goofball222/mumo/blob/main/CHANGELOG.md)
 * [Report any bugs, issues or feature requests on GitHub](https://github.com/goofball222/mumo/issues)
 
 ---
@@ -73,7 +73,7 @@ services:
 
 ```
 
-[Example `docker-compose.yml` file](https://raw.githubusercontent.com/goofball222/mumo/master/examples/docker-compose.yml)
+[Example `docker-compose.yml` file](https://raw.githubusercontent.com/goofball222/mumo/main/examples/docker-compose.yml)
 
 ---
 
